@@ -42,7 +42,7 @@ def parse_group_status(html_content, group_number):
 
 def generate_rss_feed(status, details):
     fg = FeedGenerator()
-    fg.title('SF Jury Duty Group 609 Status')
+    fg.title('Shiqi\'s SF Jury Duty Status for the week of May 5, 2025')
     fg.link(href=URL, rel='alternate')
     fg.description('Automated updates for San Francisco jury group 609 reporting instructions.')
     fg.language('en')
