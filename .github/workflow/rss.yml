@@ -28,13 +28,29 @@ jobs:
 
       - name: Deploy RSS feed to gh-pages
         run: |
+          # configure git so we can push
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+
+          # fetch full history so we can switch branches
           git fetch --all
+
+          # switch to orphan gh-pages branch (no history)
           git checkout --orphan gh-pages
-          git rm -rf .
+
+          # remove all files that are already tracked on the gh-pages branch
+          git rm -rf $(git ls-files)
+
+          # disable Jekyll processing
           touch .nojekyll
+
+          # move the newly generated feed into place
           mv feed.xml index.xml
+
+          # commit just .nojekyll + index.xml
           git add .nojekyll index.xml
           git commit -m "Update RSS feed"
+
+          # force-push to gh-pages
           git push origin gh-pages --force
+
