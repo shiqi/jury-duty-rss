@@ -26,31 +26,24 @@ jobs:
       - name: Run the jury duty script
         run: python jury-duty-rss.py > feed.xml
 
-      - name: Deploy RSS feed to gh-pages
+      - name: Set up Git
         run: |
-          # configure git so we can push
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-          # fetch full history so we can switch branches
-          git fetch --all
+      - name: Commit and Push RSS feed to GitHub Pages
+        run: |
+          # Checkout gh-pages branch, create if it doesn't exist
+          git checkout gh-pages || git checkout --orphan gh-pages
 
-          # switch to orphan gh-pages branch (no history)
-          git checkout --orphan gh-pages
+          # Remove all files from the previous push (but keep the RSS feed)
+          git rm -rf .
 
-          # remove all files that are already tracked on the gh-pages branch
-          git rm -rf $(git ls-files)
-
-          # disable Jekyll processing
-          touch .nojekyll
-
-          # move the newly generated feed into place
+          # Move feed.xml to index.xml
           mv feed.xml index.xml
 
-          # commit just .nojekyll + index.xml
-          git add .nojekyll index.xml
+          # Commit and push the file
+          git add index.xml
           git commit -m "Update RSS feed"
-
-          # force-push to gh-pages
           git push origin gh-pages --force
 
