@@ -1,0 +1,43 @@
+name: Jury Duty RSS Feed
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs every hour
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  generate-rss:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+        
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 feedgen
+      
+      - name: Run the jury duty script
+        run: python jury-duty-rss.py > feed.xml
+
+      - name: Upload RSS Feed as Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: rss-feed
+          path: feed.xml
+
+      - name: Commit and push RSS Feed to GitHub Pages
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git checkout -b gh-pages
+          mv feed.xml index.xml  # Rename the RSS feed to index.xml for easier access
+          git add index.xml
+          git commit -m "Update RSS feed"
+          git push origin gh-pages --force
