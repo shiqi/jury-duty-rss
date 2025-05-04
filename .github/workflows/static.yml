@@ -40,16 +40,17 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install requests beautifulsoup4 feedgen
+          mkdir rss
       
       - name: Run the jury duty script
-        run: python jury-duty-rss.py > feed.xml
+        run: python jury-duty-rss.py > rss/feed.xml
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: 'feed.xml'
+          path: 'rss'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
