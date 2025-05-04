@@ -26,18 +26,15 @@ jobs:
       - name: Run the jury duty script
         run: python jury-duty-rss.py > feed.xml
 
-      - name: Upload RSS Feed as Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: rss-feed
-          path: feed.xml
-
-      - name: Commit and push RSS Feed to GitHub Pages
+      - name: Deploy RSS feed to gh-pages
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git checkout -b gh-pages
-          mv feed.xml index.xml  # Rename the RSS feed to index.xml for easier access
-          git add index.xml
+          git fetch --all
+          git checkout --orphan gh-pages
+          git rm -rf .
+          touch .nojekyll
+          mv feed.xml index.xml
+          git add .nojekyll index.xml
           git commit -m "Update RSS feed"
           git push origin gh-pages --force
