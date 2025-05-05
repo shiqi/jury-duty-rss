@@ -36,7 +36,7 @@ def parse_group_status(html_content, group_number):
         elif "Groups On Standby:" in line:
             if str(group_number) in line:
                 status = "Standby"
-                details = "You are not needed to report in person at this time. Please check back after 4:30 p.m. on Monday."
+                details = "You are not needed to report in person at this time. Please check back after 4:30 p.m. on Next Day."
                 return status, details
     return status, details
 
