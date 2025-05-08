@@ -33,10 +33,10 @@ def parse_group_status(html_content, group_number):
                 details = "\n".join(details_lines).strip()
                 status = "Report in person"
                 return status, details
-        elif "Groups On Standby:" in line:
+        elif "Groups Excused:" in line:
             if str(group_number) in line:
-                status = "Standby"
-                details = "You are not needed to report in person at this time. Please check back after 4:30 p.m. on Next Day."
+                status = "Completed!"
+                details = "Your jury service is complete. Thank you!"
                 return status, details
     return status, details
 
